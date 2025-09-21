@@ -3,6 +3,9 @@ name: Renovate Tokens
 on:
   schedule:
     - cron: "* * * * *"
+  push:
+    branches:
+      - 'main'
 
 jobs:
   repositories:
