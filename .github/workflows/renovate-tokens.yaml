@@ -53,7 +53,7 @@ jobs:
           app-id: ${{ secrets.RENOVATE_BOT_CLIENT_ID }}
           private-key: ${{ secrets.RENOVATE_BOT_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: ${{ matrix.repository }}
+          repositories: renovate-runner
       - name: Set WorkFlow Dispatch Token
         uses: actions/github-script@v8
         id: repositories
