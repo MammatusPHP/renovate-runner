@@ -53,3 +53,18 @@ jobs:
           private-key: ${{ secrets.RENOVATE_BOT_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: ${{ matrix.repository }}
+      - name: Set WorkFlow Dispatch Token
+        uses: actions/github-script@v8
+        id: repositories
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            await octokit.request('PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}', {
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ matrix.repository }}',
+              secret_name: 'RENOVATE_WORKFLOW_DISPATCH_TOKEN',
+              value: '${{ steps.app-token.outputs.token }}',
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
+            });
