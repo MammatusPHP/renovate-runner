@@ -57,7 +57,7 @@ jobs:
         uses: actions/github-script@v8
         id: repositories
         with:
-          github-token: ${{ steps.app-token.outputs.token }}
+          github-token: ${{ steps.repo-token.outputs.token }}
           script: |
             await octokit.request('PUT /repos/{owner}/{repo}/actions/secrets/{secret_name}', {
               owner: '${{ github.repository_owner }}',
