@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       repositories: ${{ steps.repositories.outputs.result }}
-      appToken: ${{ steps.app-token.outputs.token }}
     steps:
       - name: Generate App Token for Renovate
         uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
@@ -47,6 +46,14 @@ jobs:
     steps:
       - run: npm install libsodium-wrappers
       - run: echo "${{ matrix.repository }}"
+      - name: Generate App Token for Renovate
+        uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
+        id: app-token
+        with:
+          app-id: ${{ secrets.RENOVATE_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.RENOVATE_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ secrets.RENOVATE_REPOSITORIES }}
       - name: Generate App Token for Renovate to be shared across repos
         uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
         id: repo-token
@@ -59,7 +66,7 @@ jobs:
         uses: actions/github-script@v8
         id: repositories
         with:
-          github-token: ${{ fromJSON(needs.repositories.outputs.appToken) }}
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const sodium = require('libsodium-wrappers');
             const key = await octokit.request('GET /repos/{owner}/{repo}/actions/secrets/public-key', {
