@@ -52,5 +52,4 @@ jobs:
           app-id: ${{ secrets.RENOVATE_BOT_CLIENT_ID }}
           private-key: ${{ secrets.RENOVATE_BOT_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories:
-            - ${{ matrix.repository }}
+          repositories: ${{ matrix.repository }}
