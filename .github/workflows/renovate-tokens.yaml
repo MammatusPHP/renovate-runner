@@ -59,7 +59,7 @@ jobs:
         uses: actions/github-script@v8
         id: repositories
         with:
-          github-token: ${{ needs.repositories.outputs.appToken }}
+          github-token: ${{ fromJSON(needs.repositories.outputs.appToken) }}
           script: |
             const sodium = require('libsodium-wrappers');
             const key = await octokit.request('GET /repos/{owner}/{repo}/actions/secrets/public-key', {
