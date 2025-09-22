@@ -10,6 +10,12 @@ on:
   issues:
     types:
       - edited
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: Repo to run this action for
+        type: string
+        required: true
 
 concurrency:
   group: 'renovate'
@@ -27,7 +33,7 @@ jobs:
           app-id: ${{ secrets.RENOVATE_BOT_CLIENT_ID }}
           private-key: ${{ secrets.RENOVATE_BOT_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: ${{ secrets.RENOVATE_REPOSITORIES }}
+          repositories: ${{ inputs.repo || secrets.RENOVATE_REPOSITORIES }}
       - name: Renovate
         uses: WyriHaximus/github-action-renovatebot@4c2398bc32cd0cf1d54e5e22d253bdae464b8b02 # v0.1.0
         with:
