@@ -69,6 +69,7 @@ jobs:
               }
             });
             const secret = '${{ steps.repo-token.outputs.token }}';
+            console.log([key, secret]);
             await sodium.ready;
             // Convert the secret and key to a Uint8Array.
             let binkey = sodium.from_base64(key, sodium.base64_variants.ORIGINAL)
