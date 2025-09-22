@@ -33,7 +33,7 @@ jobs:
                 'X-GitHub-Api-Version': '2022-11-28'
               }
             });
-            return response.data.repositories.flatMap((repo) => repo.full_name);
+            return response.data.repositories.flatMap((repo) => repo.name);
   set-token-for-repository:
     name: Renovate Tokens
     runs-on: ubuntu-latest
