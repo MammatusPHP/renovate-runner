@@ -30,7 +30,8 @@ jobs:
                 'X-GitHub-Api-Version': '2022-11-28'
               }
             });
-            const repos = response.data.repositories.each(repo => repo.full_name);
+            console.log(response);
+            const repos = response.repositories.each(repo => repo.full_name);
             console.log(repos);
 #  set-token-for-repository:
 #    name: Renovate Tokens
