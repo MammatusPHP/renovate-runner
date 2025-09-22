@@ -11,6 +11,8 @@ jobs:
   repositories:
     name: Renovate Tokens
     runs-on: ubuntu-latest
+    outputs:
+      repositories: ${{ steps.repositories.outputs.result }}
     steps:
       - name: Generate App Token for Renovate
         uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
@@ -22,6 +24,7 @@ jobs:
           repositories: ${{ secrets.RENOVATE_REPOSITORIES }}
       - name: List repositories
         uses: actions/github-script@v8
+        id: repositories
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
@@ -30,12 +33,18 @@ jobs:
                 'X-GitHub-Api-Version': '2022-11-28'
               }
             });
-            const repos = response.data.repositories.flatMap((repo) => repo.full_name);
-            console.log(repos);
-#  set-token-for-repository:
-#    name: Renovate Tokens
-#    runs-on: ubuntu-latest
-#    steps:
+            return response.data.repositories.flatMap((repo) => repo.full_name);
+  set-token-for-repository:
+    name: Renovate Tokens
+    runs-on: ubuntu-latest
+    needs:
+      - repositories
+    strategy:
+      fail-fast: false
+      matrix:
+        repository: ${{ fromJSON(needs.repositories.outputs.repositories) }}
+    steps:
+      - runs: echo "${{ matrix.repository }}"
 #      - name: Generate App Token for Renovate to be shared across repos
 #        uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
 #        id: shared-token
@@ -44,4 +53,4 @@ jobs:
 #          private-key: ${{ secrets.RENOVATE_BOT_PRIVATE_KEY }}
 #          owner: ${{ github.repository_owner }}
 #          repositories:
-#            - ${{ github.repository }}
+#            - ${{ matrix.repository }}
